@@ -52,6 +52,30 @@ service nginx restart
 ### 安装并配置tomcat
 在两台tomcat节点执行以下命令
 
+**安装tomcat**
+``` bash
+# 下载并安装jdk1.6
+# 需要注册oracle帐号才能在下面下载
+http://www.oracle.com/technetwork/java/javase/downloads/java-archive-downloads-javase6-419409.html
+chmod u+x jre-6u45-linux-x64.bin
+mv jre1.6.0_45 /usr/local/
+ln -s /usr/local/jre1.6.0_45/ /usr/local/jdk
+vi /etc/profile.d/java-env.sh
+*******************************
+JAVA_HOME=/usr/local/jdk
+JRE_HOME=${JAVA_HOME}/jre
+PATH=$PATH:${JAVA_HOME}/bin:${JRE_HOME}/bin
+CLASSPATH=${JAVA_HOME}/lib:${JRE_HOME}/lib
+*******************************
+source /etc/profile.d/java-env.sh
+
+# 安装tomcat
+wget http://mirror.rise.ph/apache/tomcat/tomcat-6/v6.0.45/bin/apache-tomcat-6.0.45.tar.gz
+tar zxf apache-tomcat-6.0.45.tar.gz
+mv apache-tomcat-6.0.45 /usr/local/tomcat
+```
+
+
 **配置tomcat**
 ``` bash
 # 配置tomcat虚拟主机
@@ -77,6 +101,38 @@ vim /usr/local/tomcat/conf/context.xml
 ```
 Valve要在Manager之前
 注意className，网上的都不一样，需要按照自己下载jar包的版本进行调整
+
+**编写测试程序**
+``` bash
+# 创建web程序目录
+mkdir -p /data/webapps/{WEB-INF,META-INF,classes,lib}
+cd /data/webapps
+
+# 编写首页程序
+# ss02上把Tomcat01更换成Tomcat02
+vim index.jsp
+***********************
+<%@ page language="java" %>
+<html>
+  <head><title>Tomcat01</title></head>
+  <body>
+    <h1><font color="red">Tomcat01.magedu.com</font></h1>
+    <table align="centre" border="1">
+      <tr>
+        <td>Session ID</td>
+    <% session.setAttribute("magedu.com","magedu.com"); %>
+        <td><%= session.getId() %></td>
+      </tr>
+      <tr>
+        <td>Created on</td>
+        <td><%= session.getCreationTime() %></td>
+     </tr>
+    </table>
+  </body>
+</html>
+***********************
+```
+
 
 ### 安装并配置redis
 **安装redis**
