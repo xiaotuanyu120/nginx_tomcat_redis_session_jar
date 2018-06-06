@@ -1,0 +1,7 @@
+<Valve className="com.orangefunction.tomcat.redissessions.RedisSessionHandlerValve" />
+<Manager className="com.orangefunction.tomcat.redissessions.RedisSessionManager"
+         host="127.0.0.1"
+         password='gsmcredis'
+         port="6389"
+         database="0"
+         maxInactiveInterval="1200"/>
